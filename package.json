@@ -1,0 +1,29 @@
+{
+  "name": "evenbooks",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "packageManager": "pnpm@10.34.5+sha512.a4ee05f2f73658255bd6a89859c065a45c28a57daefae2c893a168ee2b73168c37b91e83e57ea67654ad03f03031746430e8bce38e362e042605fb8abc80192e",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @evenbooks/web dev",
+    "dev:worker": "pnpm --filter @evenbooks/worker dev",
+    "build": "pnpm -r --filter './packages/**' --filter './apps/**' run build",
+    "typecheck": "pnpm -r run typecheck",
+    "lint": "eslint .",
+    "test": "pnpm -r run test",
+    "test:e2e": "pnpm --filter @evenbooks/web test:e2e",
+    "db:migrate": "pnpm --filter @evenbooks/db migrate",
+    "db:reset": "pnpm --filter @evenbooks/db reset",
+    "db:seed": "pnpm --filter @evenbooks/db seed"
+  },
+  "devDependencies": {
+    "eslint": "10.10.0",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "railway": "^3.11.0",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.70.0"
+  }
+}

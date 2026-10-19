@@ -1,0 +1,35 @@
+import { test, expect } from '@playwright/test';
+import type { AccountDto, LedgerImportDto, JournalEntryDto } from '@evenbooks/contracts';
+import { apiGet, apiPost, devLogin, gotoReady, pickOption, unique } from './helpers';
+
+test('review imported collections, correct cash amounts, and preserve accrual totals', async ({ page }) => {
+  test.setTimeout(180_000);
+  await devLogin(page, { orgId: unique('org_dev_e2e_cash_review').replaceAll(' ', '_') });
+  const accounts = await apiGet<AccountDto[]>(page, '/api/accounts');
+  const account = (code: string) => accounts.find(a => a.code === code)!.id;
+  const ar = await apiPost<AccountDto>(page, '/api/accounts', { code: '1195', name: 'Legacy receivables', type: 'asset' });
+  const csv = 'Transaction ID,Date,Account,Description,Debit,Credit\nI,2028-01-01,Legacy receivables,Old invoice,1000,\nI,2028-01-01,Service Income,Old invoice,,1000\nP,2028-02-01,Checking Account,Invoice collection,500,\nP,2028-02-01,Legacy receivables,Invoice collection,,500';
+  const imp = await apiPost<LedgerImportDto>(page, '/api/imports/ledger', { fileName: 'collections.csv', content: csv });
+  await apiPost(page, `/api/imports/ledger/${imp.id}`, { accountMap: { 'Legacy receivables': ar.id, 'Service Income': account('4100'), 'Checking Account': account('1000') } }, 'PATCH');
+  await gotoReady(page, `/settings/import/ledger?id=${imp.id}`);
+  await expect(page.getByText('Review cash-basis income and expenses for this settlement before importing')).toBeVisible();
+  await expect(page.getByRole('button', { name: /Import \d+ transaction/ })).toBeDisabled();
+  await page.getByRole('button', { name: 'Add cash-basis line' }).click();
+  await pickOption(page.getByRole('combobox', { name: 'Cash-basis account 1' }), '4100', /^4100/);
+  await page.getByLabel('Cash-basis amount 1').fill('500');
+  await page.getByRole('button', { name: 'Save cash-basis review' }).click();
+  await expect(page.getByRole('button', { name: 'Import 2 transactions' })).toBeEnabled();
+  await page.getByRole('button', { name: 'Import 2 transactions' }).click();
+  await expect(page.getByText('History imported')).toBeVisible();
+  const cashPath = '/api/reports/profit-and-loss?from=2028-02-01&to=2028-02-29&basis=cash';
+  expect((await apiGet<{ totalIncome: string }>(page, cashPath)).totalIncome).toBe('500.00');
+  const entries = await apiGet<{ items: JournalEntryDto[] }>(page, '/api/journal?sourceType=import');
+  const collection = entries.items.find(e => e.date === '2028-02-01')!;
+  await gotoReady(page, `/journal/${collection.id}`);
+  await page.getByLabel('Reason for cash-basis review').fill('Correct historical settlement');
+  await page.getByLabel('Cash-basis amount 1').fill('450');
+  await page.getByRole('button', { name: 'Save cash-basis review' }).click();
+  await expect(page.getByText('Cash-basis review saved', { exact: true })).toBeVisible();
+  expect((await apiGet<{ totalIncome: string }>(page, cashPath)).totalIncome).toBe('450.00');
+  expect((await apiGet<{ totalIncome: string }>(page, '/api/reports/profit-and-loss?from=2028-01-01&to=2028-02-29&basis=accrual')).totalIncome).toBe('1000.00');
+});

@@ -1,0 +1,29 @@
+{
+  "name": "@evenbooks/integrations",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run --passWithNoTests",
+    "lint": "eslint src"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "3.1134.0",
+    "@aws-sdk/client-sesv2": "3.1134.0",
+    "@aws-sdk/s3-request-presigner": "3.1134.0",
+    "@evenbooks/domain": "workspace:*",
+    "pdfkit": "0.20.2",
+    "sns-validator": "0.3.5",
+    "stripe": "22.6.2"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.3",
+    "@types/pdfkit": "0.17.6",
+    "typescript": "5.9.3",
+    "vitest": "4.1.11"
+  }
+}

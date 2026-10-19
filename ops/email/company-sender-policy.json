@@ -1,0 +1,57 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ProvisionAndSendCompanyEmails",
+      "Effect": "Allow",
+      "Action": [
+        "ses:CreateEmailIdentity",
+        "ses:GetEmailIdentity",
+        "ses:CreateTenant",
+        "ses:GetTenant",
+        "ses:CreateTenantResourceAssociation",
+        "ses:CreateConfigurationSet",
+        "ses:CreateConfigurationSetEventDestination",
+        "ses:UpdateReputationEntityPolicy",
+        "ses:SendEmail"
+      ],
+      "Resource": [
+        "arn:aws:ses:us-east-1:<AWS_ACCOUNT_ID>:identity/*",
+        "arn:aws:ses:us-east-1:<AWS_ACCOUNT_ID>:configuration-set/*",
+        "arn:aws:ses:us-east-1:<AWS_ACCOUNT_ID>:tenant/evenbooks-company-*/*",
+        "arn:aws:ses:us-east-1:aws:reputation-policy/strict"
+      ]
+    },
+    {
+      "Sid": "DenySesOutsideProduction",
+      "Effect": "Deny",
+      "Action": "ses:*",
+      "Resource": "*",
+      "Condition": {
+        "NotIpAddress": {
+          "aws:SourceIp": [
+            "<STATIC_OUTBOUND_IP_1>/32",
+            "<STATIC_OUTBOUND_IP_2>/32"
+          ]
+        }
+      }
+    },
+    {
+      "Sid": "DenySendingWithoutCompanyTenant",
+      "Effect": "Deny",
+      "Action": [
+        "ses:SendEmail",
+        "ses:SendRawEmail",
+        "ses:SendBulkEmail",
+        "ses:SendTemplatedEmail",
+        "ses:SendBulkTemplatedEmail"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "StringNotLike": {
+          "ses:TenantName": "evenbooks-company-*"
+        }
+      }
+    }
+  ]
+}

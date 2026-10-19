@@ -1,0 +1,34 @@
+{
+  "name": "@evenbooks/worker",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/main.ts",
+    "start": "tsx src/main.ts",
+    "start:once": "tsx src/run-once.ts",
+    "build": "tsc --noEmit -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run",
+    "lint": "eslint src"
+  },
+  "dependencies": {
+    "@evenbooks/contracts": "workspace:*",
+    "@evenbooks/db": "workspace:*",
+    "@evenbooks/domain": "workspace:*",
+    "@evenbooks/integrations": "workspace:*",
+    "@evenbooks/services": "workspace:*",
+    "dotenv": "17.4.2",
+    "drizzle-orm": "0.45.2",
+    "pg": "8.23.0",
+    "pg-boss": "12.33.0",
+    "pino": "10.3.1",
+    "tsx": "4.23.13"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.3",
+    "@types/pg": "8.23.1",
+    "typescript": "5.9.3",
+    "vitest": "4.1.11"
+  }
+}

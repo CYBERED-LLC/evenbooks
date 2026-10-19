@@ -1,0 +1,200 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-brand-50: #f0f7f4;
+  --color-brand-100: #d9ece3;
+  --color-brand-200: #b5d9c8;
+  --color-brand-300: #85bfa6;
+  --color-brand-400: #55a082;
+  --color-brand-500: #368467;
+  --color-brand-600: #266a52;
+  --color-brand-700: #1f5543;
+  --color-brand-800: #1b4437;
+  --color-brand-900: #17382e;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+:root {
+  color-scheme: light;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  @apply bg-stone-50 text-stone-900 antialiased;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-brand-500);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Tailwind 4 preflight resets buttons to cursor: default; clickable controls should show a pointer. */
+@layer base {
+  button:not(:disabled),
+  [role='button']:not([aria-disabled='true']) {
+    cursor: pointer;
+  }
+}
+
+/*
+ * iOS Safari draws native date and time fields at their content's size: they
+ * ignore width: 100% (spilling out of filter bars) and sit taller than other
+ * inputs. Dropping the native appearance makes them obey the box like a text
+ * input; tapping still opens the system picker.
+ */
+@supports (-webkit-touch-callout: none) {
+  @layer base {
+    input:is([type='date'], [type='month'], [type='time'], [type='datetime-local']) {
+      -webkit-appearance: none;
+      appearance: none;
+      min-width: 0;
+    }
+    input::-webkit-date-and-time-value {
+      margin: 0;
+      text-align: left;
+    }
+  }
+}
+
+/* ------------------------------------------------------------------------- */
+/* Brand theme (docs/brand-bible.md).                                         */
+/* Light = Ledger (the base), dark = Midnight under [data-theme='dark'].      */
+/* The mode (system/light/dark) lives in data-mode; a small inline script in  */
+/* the root layout resolves "system" to data-theme before first paint.        */
+/* ------------------------------------------------------------------------- */
+
+@theme {
+  --font-display: var(--font-sans);
+}
+
+:root {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.625rem;
+  --color-white: #fffdf8;
+  --color-stone-50: #faf7f0;
+  --color-stone-100: #f3eee3;
+  --color-stone-200: #e6dfd0;
+  --color-stone-300: #d3c9b6;
+  --color-stone-400: #a89c86;
+  --color-stone-500: #7d7262;
+  --color-stone-600: #5c5346;
+  --color-stone-700: #463f35;
+  --color-stone-800: #2f2a23;
+  --color-stone-900: #1c1915;
+  --color-stone-950: #120f0c;
+  --color-brand-50: #eef5f0;
+  --color-brand-100: #d8e8dd;
+  --color-brand-200: #b3d1bd;
+  --color-brand-300: #86b499;
+  --color-brand-400: #5a9577;
+  --color-brand-500: #3b7a5d;
+  --color-brand-600: #2b614a;
+  --color-brand-700: #244e3d;
+  --color-brand-800: #1e3f32;
+  --color-brand-900: #19342a;
+}
+.font-display {
+  font-variation-settings: 'opsz' 144, 'SOFT' 30;
+  letter-spacing: -0.01em;
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+  --font-sans: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --color-white: #141920;
+  --color-stone-50: #1b212a;
+  --color-stone-100: #222933;
+  --color-stone-200: #2e3742;
+  --color-stone-300: #3d4856;
+  --color-stone-400: #6b788c;
+  --color-stone-500: #8f9bab;
+  --color-stone-600: #aab4c2;
+  --color-stone-700: #c7cfda;
+  --color-stone-800: #dde3eb;
+  --color-stone-900: #f0f3f7;
+  --color-stone-950: #ffffff;
+  --color-brand-50: #10261f;
+  --color-brand-100: #143126;
+  --color-brand-200: #1b4636;
+  --color-brand-300: #1f6b51;
+  --color-brand-400: #2a9a75;
+  --color-brand-500: #36b98e;
+  --color-brand-600: #4fd1a6;
+  --color-brand-700: #7fe0c0;
+  --color-brand-800: #a9ebd5;
+  --color-brand-900: #d3f5e9;
+  --color-red-50: #2a1416;
+  --color-red-100: #3a1a1d;
+  --color-red-200: #5a2327;
+  --color-red-300: #7a2f33;
+  --color-red-500: #f26b6b;
+  --color-red-600: #e5484d;
+  --color-red-700: #f27b7b;
+  --color-red-800: #f5a3a3;
+  --color-red-900: #fbd0d0;
+  --color-emerald-50: #10261f;
+  --color-emerald-100: #143126;
+  --color-emerald-200: #1b4636;
+  --color-emerald-600: #4fd1a6;
+  --color-emerald-700: #7fe0c0;
+  --color-emerald-800: #a9ebd5;
+  --color-emerald-900: #d3f5e9;
+  --color-amber-50: #2b2210;
+  --color-amber-100: #3a2c12;
+  --color-amber-200: #5a4418;
+  --color-amber-600: #f0b43b;
+  --color-amber-700: #f5c65f;
+  --color-amber-800: #f8d98c;
+  --color-amber-900: #fbe9bd;
+  --color-sky-50: #0f2230;
+  --color-sky-100: #142e40;
+  --color-sky-200: #1d4560;
+  --color-sky-600: #4fb3f0;
+  --color-sky-700: #7cc7f5;
+  --color-sky-800: #a9daf8;
+  --color-sky-900: #d3ecfb;
+  --color-blue-50: #0f2230;
+  --color-blue-100: #142e40;
+  --color-blue-200: #1d4560;
+  --color-blue-600: #5b9cf6;
+  --color-blue-700: #86b6f8;
+  --color-blue-800: #b1cffb;
+  --color-violet-100: #2a2140;
+  --color-violet-800: #cbb8f5;
+}
+[data-theme='dark'] .font-display {
+  font-variation-settings: normal;
+  letter-spacing: -0.015em;
+}
+/* Midnight sets figures in Plex Mono. Only table cells shrink slightly to compensate for the wider set; elsewhere the size utility on the element wins. */
+[data-theme='dark'] .tabular {
+  font-family: var(--font-mono);
+}
+[data-theme='dark'] td.tabular {
+  font-size: 0.95em;
+}
+html[data-theme='dark'] body {
+  background-color: #0e1115;
+}
